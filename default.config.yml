@@ -18,6 +18,9 @@ kube_install: false
 # This IP Address must be close reachable by the server from which this installer is running
 k3s_master_node_ip: "127.0.0.1"
 
++# Offline Install - Whether to use local assets to complete the install
+k8s_offline: false
+
 # ---eks variables---
 
 # Determines whether to use Route53's Domain Management (which is automated)

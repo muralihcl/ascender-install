@@ -64,7 +64,13 @@ fi
 check_collections
 if [ $? -ne 1 ]; then
   echo "#### INSTALLING COLLECTIONS ####"
-  ansible-galaxy install -r collections/requirements.yml
+  if [ -f "$(dirname $0)/offline/collections/ansible-posix-1.5.4.tar.gz" ]; then
+    ansible-galaxy collection install $(dirname $0)/offline/collections/ansible-posix-1.5.4.tar.gz
+    ansible-galaxy collection install $(dirname $0)/offline/collections/awx-awx-23.4.0.tar.gz
+    ansible-galaxy collection install $(dirname $0)/offline/collections/kubernetes-core-2.4.0.tar.gz
+  else
+    ansible-galaxy install -r collections/requirements.yml
+  fi
 fi
 
 PASSED_ARG=$@
@@ -93,7 +99,7 @@ then
     esac
   done
 else
-  ansible-playbook -i "${INVENTORY_FILE}" playbooks/setup.yml
+  LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 ansible-playbook -i "${INVENTORY_FILE}" playbooks/setup.yml
 
   RC=$?
   if [ ${RC} -ne 0 ]; then
