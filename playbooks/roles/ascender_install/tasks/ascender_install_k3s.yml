@@ -10,16 +10,33 @@
     kind: Namespace
     verify_ssl: false
     state: present
-    
-- name: Generate manifest to install AWX Operator
-  ansible.builtin.template:
-    src: templates/awx-operator/kustomization.j2
-    dest: "{{ tmp_dir }}/kustomization.yml"
 
-- name: Generate manifest to install AWX Operator with timestamp attached, for purposes of operator deletion later
-  ansible.builtin.template:
-    src: templates/awx-operator/kustomization.j2
-    dest: "{{ tmp_dir }}/kustomization.yml.{{ ansible_date_time.iso8601_basic_short }}"
+- name: Install AWX Operator (Online)
+  when: not k8s_offline
+  block:
+  - name: Generate manifest to install AWX Operator
+    ansible.builtin.template:
+      src: templates/awx-operator/kustomization.j2
+      dest: "{{ tmp_dir }}/kustomization.yml"
+
+  - name: Generate manifest to install AWX Operator with timestamp attached, for purposes of operator deletion later
+    ansible.builtin.template:
+      src: templates/awx-operator/kustomization.j2
+      dest: "{{ tmp_dir }}/kustomization.yml.{{ ansible_date_time.iso8601_basic_short }}"
+
+- name: Install AWX Operator (Offline)
+  when: not k8s_offline
+  block:
+  - name: Generate manifest to install AWX Operator
+    ansible.builtin.template:
+      src: templates/awx-operator/kustomization-offline.j2
+      dest: "{{ tmp_dir }}/kustomization.yml"
+
+  - name: Generate manifest to install AWX Operator with timestamp attached, for purposes of operator deletion later
+    ansible.builtin.template:
+      src: templates/awx-operator/kustomization-offline.j2
+      dest: "{{ tmp_dir }}/kustomization.yml.{{ ansible_date_time.iso8601_basic_short }}"
+
 
 - name: Install AWX Operator with Kustomize
   kubernetes.core.k8s:
