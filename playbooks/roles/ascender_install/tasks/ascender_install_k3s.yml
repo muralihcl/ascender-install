@@ -25,7 +25,7 @@
       dest: "{{ tmp_dir }}/kustomization.yml.{{ ansible_date_time.iso8601_basic_short }}"
 
 - name: Install AWX Operator (Offline)
-  when: not k8s_offline
+  when: k8s_offline
   block:
   - name: Generate manifest to install AWX Operator
     ansible.builtin.template:
