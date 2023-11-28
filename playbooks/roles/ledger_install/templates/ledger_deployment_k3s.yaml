@@ -160,7 +160,7 @@ spec:
         - name: admin-password
           value: /run/secrets/admin-password
         image: {{ LEDGER_DB_IMAGE }}:{{ LEDGER_VERSION }}
-        imagePullPolicy: Always
+        imagePullPolicy: {% if k8s_offline %}Never{% else %}Always{% endif %}
         name: db
         ports:
         - containerPort: 3306
@@ -221,7 +221,7 @@ spec:
         - name: MYSQL_LEDGER_PASSWORD
           value: /run/secrets/db-ledger-password
         image: {{ LEDGER_PARSER_IMAGE }}:{{ LEDGER_VERSION }}
-        imagePullPolicy: Always
+        imagePullPolicy: {% if k8s_offline %}Never{% else %}Always{% endif %}
         name: parser
         ports:
         - containerPort: 5000
@@ -269,7 +269,7 @@ spec:
         - name: MYSQL_LEDGER_PASSWORD
           value: /run/secrets/db-ledger-password
         image: {{ LEDGER_WEB_IMAGE }}:{{ LEDGER_VERSION }}
-        imagePullPolicy: Always
+        imagePullPolicy: {% if k8s_offline %}Never{% else %}Always{% endif %}
         name: web
         ports:
         - containerPort: 80
