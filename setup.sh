@@ -2,6 +2,9 @@
 
 # Copyright (c) 2023, Ctrl IQ, Inc. All rights reserved.
 
+# Change to script directory
+cd "$(dirname $0)"
+
 # Verify that the CPU architecture of the local machine is x86_64
 LINUX_ARCH=$(arch)
 if [[ $LINUX_ARCH != "x86_64" ]]; then
