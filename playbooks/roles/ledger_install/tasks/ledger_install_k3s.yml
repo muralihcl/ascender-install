@@ -105,11 +105,29 @@
     msg: "Ascender API is up"
 
 - name: Set all the logging parameters
+  when: LEDGER_ADMIN_PASSWORD is defined
   awx.awx.settings:
     controller_host: "{{ k8s_lb_protocol }}://{{ ascender_ip }}:{{ ascender_port }}"
     controller_username: "{{ ASCENDER_ADMIN_USER }}"
     controller_password: "{{ ASCENDER_ADMIN_PASSWORD }}"
-    validate_certs: no
+    validate_certs: false
+    settings:
+      LOG_AGGREGATOR_HOST: "http://{{ ledger_parser_ip }}"
+      LOG_AGGREGATOR_PORT: "{{ ledger_parser_port }}"
+      LOG_AGGREGATOR_TYPE: other
+      LOG_AGGREGATOR_ENABLED: true
+      LOG_AGGREGATOR_VERIFY_CERT: false
+      LOG_AGGREGATOR_LEVEL: INFO
+      LOG_AGGREGATOR_USERNAME: "{{ ASCENDER_ADMIN_USER }}"
+      LOG_AGGREGATOR_PASSWORD: "{{ LEDGER_ADMIN_PASSWORD }}"
+
+- name: Set all the logging parameters
+  when: LEDGER_ADMIN_PASSWORD is undefined
+  awx.awx.settings:
+    controller_host: "{{ k8s_lb_protocol }}://{{ ascender_ip }}:{{ ascender_port }}"
+    controller_username: "{{ ASCENDER_ADMIN_USER }}"
+    controller_password: "{{ ASCENDER_ADMIN_PASSWORD }}"
+    validate_certs: false
     settings:
       LOG_AGGREGATOR_HOST: "{{ k8s_lb_protocol }}://{{ ledger_parser_ip }}"
       LOG_AGGREGATOR_PORT: "{{ ledger_parser_port }}"
