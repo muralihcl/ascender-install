@@ -105,7 +105,7 @@
     msg: "Ascender API is up"
 
 - name: Set all the logging parameters
-  when: ASCENDER_ADMIN_USER is defined and LEDGER_ADMIN_PASSWORD is defined
+  when: LEDGER_ADMIN_PASSWORD is defined
   awx.awx.settings:
     controller_host: "{{ k8s_lb_protocol }}://{{ ascender_ip }}:{{ ascender_port }}"
     controller_username: "{{ ASCENDER_ADMIN_USER }}"
